@@ -1,0 +1,6 @@
+*.pbf
+europe/british-isles/*
+europe/netherlands/*
+expire.list
+render.log
+statistics.txt

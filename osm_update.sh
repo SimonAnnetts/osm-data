@@ -12,7 +12,7 @@ baseUrl="http://download.geofabrik.de/"
 baseDir=~/osm-data/
 
 # get a list of the datasets we need to update based on the directories present
-datasets=$(find -mindepth 2 -maxdepth 2 -type d | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
+datasets=$(find -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
 
 for dataset in $datasets; do
 

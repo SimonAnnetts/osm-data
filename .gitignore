@@ -1,6 +1,5 @@
 *.pbf
-europe/british-isles/*
-europe/netherlands/*
+data/*/
 expire.list
 render.log
 statistics.txt

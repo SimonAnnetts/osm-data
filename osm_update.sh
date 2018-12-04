@@ -9,14 +9,14 @@ exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' >&2)
 starttime=$(date +%s)
 
 baseUrl="http://download.geofabrik.de/"
-baseDir=~/osm-data/
+baseDir=~/osm-data/data/
 
 # get a list of the datasets we need to update based on the directories present
-datasets=$(find -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
+datasets=$(find data -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
 
 for dataset in $datasets; do
 
-        cd ${baseDir}${dataset}
+    cd ${baseDir}${dataset}
 
 	# the update url
 	url="${baseUrl}${dataset}-updates/"

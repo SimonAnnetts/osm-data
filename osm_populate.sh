@@ -18,15 +18,15 @@ otm=0
 
 
 baseUrl="http://download.geofabrik.de/"
-baseDir=~/osm-data/
+baseDir=~/osm-data/data/
 cartoDir=~/openstreetmap-carto/
 topoDir=~/OpenTopoMap/
 
 touch -d "1970-01-01T00:00:00Z" /var/lib/mod_tile/planet_import_complete
 
 # get a list of the datasets we need to grab based on the directories present
-datasets=$(find -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
-o5mfiles=$(find -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 "/" $3 "-latest.o5m "}')
+datasets=$(find data -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
+o5mfiles=$(find data -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 "/" $3 "-latest.o5m "}')
 
 for dataset in $datasets; do
 

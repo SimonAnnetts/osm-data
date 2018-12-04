@@ -13,30 +13,6 @@ for i in $*; do
 	[ $i = 8 ] || [ $i = 12 ] && n=2
 	[ $i = 9 ] || [ $i = 10 ] || [ $i = 11 ] && n=1
 
-	echo "Rendering Zoom level ${i} for 900913-osm-c: "
-	./render_list_geo.sh -n ${n} -m "900913-osm-c" -x -11 -X 8 -y 48.75 -Y 62.5 -z ${i} -Z ${i} -f
-	[ $? != 0 ] && echo "Render failed on zoom level ${i} !" && exit 1
-	echo "Done!"
-
-	echo "Rendering Zoom level ${i} for 900913-osm-u: "
-	./render_list_geo.sh -n ${n} -m "900913-osm-u" -x -11 -X 8 -y 48.75 -Y 62.5 -z ${i} -Z ${i} -f
-	[ $? != 0 ] && echo "Render failed on zoom level ${i} !" && exit 1
-	echo "Done!"
-	
-	echo "Restarting renderd ...."
-	pkill renderd
-	sleep 3
-	while [ -z "$(pgrep renderd)" ]; do sleep 1; done
-	sleep 10
-	
-done
-
-for i in $*; do
-
-	n=4
-	[ $i = 8 ] || [ $i = 12 ] && n=2
-	[ $i = 9 ] || [ $i = 10 ] || [ $i = 11 ] && n=1
-
 	echo "Rendering Zoom level ${i} for 900913-otm-c: "
 	./render_list_geo.sh -n ${n} -m "900913-otm-c" -x -11 -X 8 -y 48.75 -Y 62.5 -z ${i} -Z ${i}	-f
 	[ $? != 0 ] && echo "Render failed on zoom level ${i} !" && exit 1

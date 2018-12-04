@@ -36,10 +36,7 @@ for dataset in $datasets; do
 	region=$(echo $dataset|awk 'BEGIN{FS="/"}{printf $2}')
 	url="${baseUrl}${dataset}-latest.osm.pbf"
 	echo "Downloading ${url} ..."
-	
-	mkdir -p ${baseDir}${dataset} 2>/dev/null
 	cd ${baseDir}${dataset}
-	
 	wget -o /dev/null -O ${region}-latest-new.osm.pbf "${url}"
 		
 	if [ $? = 0 ]; then

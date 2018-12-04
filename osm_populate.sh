@@ -2,8 +2,8 @@
 # script to pull openstreetmap regions and push into database
 # version 0.2 simonannetts@esdm.co.uk 2018-11-06
 
-exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}')
-exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' >&2)
+exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}' |tee -ia osm_populate.log)
+exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' |tee -ia osm_populate.log >&2)
 
 starttime=$(date +%s)
 

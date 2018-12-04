@@ -28,6 +28,8 @@ touch -d "1970-01-01T00:00:00Z" /var/lib/mod_tile/planet_import_complete
 datasets=$(find data -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 " "}')
 o5mfiles=$(find data -mindepth 2 -maxdepth 2 -type d | grep -v ".git" | awk 'BEGIN{FS="/"}{printf $2 "/" $3 "/" $3 "-latest.o5m "}')
 
+[ -z "${datasets}" ] && echo "No dataset directories were found. Please add some in data/ using the directory structure at http://download.geofabrik.de/" && exit 1
+
 for dataset in $datasets; do
 
 	# the download url

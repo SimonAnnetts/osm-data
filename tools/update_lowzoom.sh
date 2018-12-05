@@ -1,5 +1,10 @@
 #!/bin/bash
 
+exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}')
+exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' >&2)
+
+starttime=$(date +%s)
+
 ipaddress=$(ip addr show eth1|awk '/inet /{print $2}' |awk 'BEGIN{FS="/"}{print $1}')
 
 /bin/echo -n "Please provide the password for postgres user 'osm':"
@@ -77,3 +82,6 @@ psql -d lowzoom -c "INSERT INTO lakelabels SELECT * FROM dblink('hostaddr=${ipad
 psql -d lowzoom -c "INSERT INTO lakelabels SELECT * FROM dblink('hostaddr=${ipaddress} dbname=otm user=osm password=${password}','SELECT * FROM lowzoom_glacierlabel') AS t(way geometry(LineString,3857), name text, label text, way_area real);"
 psql -d lowzoom -c "CREATE INDEX lakelabels_way_idx ON lakelabels USING GIST (way);"
 
+endtime=$(date +%s)
+echo "Done in $[${endtime}-${starttime}] seconds! All your Maps Belong to Us!"
+exit 0

@@ -1,5 +1,5 @@
 *.pbf
 data/*/
 expire.list
-render.log
+*.log
 statistics.txt

@@ -16,11 +16,11 @@
 #
 # The first run may take a hour, following runs some seconds.
 #
-
+# this runs as a sub-script called from osm_populate.sh
 
 DBname='otm'
 toolpath='./'
-demfile='../heightmap.tif'
+demfile='~/osm-contours/heightmap.tif'
 
 ###### Prepare #########
 #

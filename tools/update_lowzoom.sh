@@ -1,7 +1,5 @@
 #!/bin/bash
-
-exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}')
-exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' >&2)
+# this runs as a sub-script called from osm_populate.sh
 
 starttime=$(date +%s)
 

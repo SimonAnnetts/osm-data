@@ -3,7 +3,7 @@
 #  get all saddles, cols and notches with no direction, direction
 #  described as text ("north", "nne" ..) or negative directions ("-10" is not
 #  an error, but "170" is the same direction). Estimate directions with
-#  height data and write this estimation back to datsabase.
+#  height data and write this estimation back to database.
 #
 #  The first run will update nearly all saddles, because most saddles has no
 #  mapped direction. The following runs will be faster, because only new
@@ -14,7 +14,7 @@
 
 DBname='otm'
 toolpath='./'
-demfile='../heightmap.tif'
+demfile='~/osm-contours/heightmap.tif'
 
 psql -A -t -F ";" $DBname -c \
   "SELECT osm_id,ST_X(ST_Astext(ST_Transform(way,4326))),ST_Y(ST_Astext(ST_Transform(way,4326))),direction \

@@ -19,6 +19,7 @@ otm=0
 
 baseUrl="http://download.geofabrik.de/"
 baseDir=~/osm-data/data/
+toolsDir=~/osm-data/tools/
 cartoDir=~/openstreetmap-carto/
 topoDir=~/OpenTopoMap/
 
@@ -59,6 +60,7 @@ cd ${baseDir}
 
 echo "Combining the datasets..."
 osmconvert -v ${o5mfiles} --out-pbf --timestamp=${lastupdate} -o=combined.osm.pbf
+[ $? != 0 ] && echo "Error combining the datasets. Update aborted!" && exit 1
 rm -f ${o5mfiles}
 
 echo "Gathering statistics on the combined dataset..."
@@ -80,6 +82,13 @@ if [ "$otm" = "1" ]; then
 	 --style ${topoDir}/mapnik/osm2pgsql/opentopomap.style \
 	 -d otm combined.osm.pbf
 	r2=$?
+	if [ "$r2" = "0" ]; then
+		cd ${toolsDir}
+		./install_pgfunctions.sh
+		./update_lowzoom.sh
+		./update_isolations.sh
+		./update_saddles.sh
+	fi
 fi
 
 

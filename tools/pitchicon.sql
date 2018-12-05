@@ -16,8 +16,11 @@
 --
 -- a composite type to return the 4 values
 --
-DROP   TYPE IF EXISTS otm_pitch;
-CREATE TYPE otm_pitch AS (icon TEXT,pitch_area FLOAT,angle FLOAT,labelsizefactor FLOAT);
+DO $$ BEGIN
+    CREATE TYPE otm_pitch AS (icon TEXT,pitch_area FLOAT,angle FLOAT,labelsizefactor FLOAT);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- the function

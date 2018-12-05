@@ -27,12 +27,18 @@
 --
 -- data type for a direction with start,end and angle
 -- and the same for two directions
-DROP   TYPE IF EXISTS otm_vp_viewrange;
-CREATE TYPE otm_vp_viewrange     AS (s INTEGER, e INTEGER,a INTEGER);
-DROP   TYPE IF EXISTS otm_vp_twoviewranges;
-CREATE TYPE otm_vp_twoviewranges AS (s1 INTEGER, e1 INTEGER,a1 INTEGER,s2 INTEGER, e2 INTEGER,a2 INTEGER);
 
+DO $$ BEGIN
+    CREATE TYPE otm_vp_viewrange     AS (s INTEGER, e INTEGER,a INTEGER);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+DO $$ BEGIN
+    CREATE TYPE otm_vp_twoviewranges AS (s1 INTEGER, e1 INTEGER,a1 INTEGER,s2 INTEGER, e2 INTEGER,a2 INTEGER);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE OR REPLACE FUNCTION otm_vp_parseangle(intext IN TEXT) RETURNS INTEGER AS $$
 -- interprets intext as angle, intext may be a number (-360..360) or a cardinal direction

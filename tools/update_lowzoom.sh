@@ -6,9 +6,13 @@ exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' >&2)
 starttime=$(date +%s)
 
 ipaddress=$(ip addr show eth1|awk '/inet /{print $2}' |awk 'BEGIN{FS="/"}{print $1}')
-echo
-echo "Please provide the password for postgres user 'osm':"
-read password
+if [ ! -f .config ]; then
+    echo
+    echo "Please provide the password for postgres user 'osm':"
+    read password
+else
+    password=$(cat .config)
+fi
 
 [ -z "$password" ] && echo "I need the postgres 'osm' user's password in order to set up some database Views!" && exit 1
 

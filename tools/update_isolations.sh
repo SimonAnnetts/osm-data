@@ -22,6 +22,8 @@ DBname='otm'
 toolpath='./'
 demfile=~/osm-contours/heightmap.tif
 
+echo "Updating Isolations..."
+
 ###### Prepare #########
 #
 # Check if otm_isolation is a column of planet_osm_point, if not, create it

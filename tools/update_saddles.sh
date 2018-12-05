@@ -16,6 +16,7 @@ DBname='otm'
 toolpath='./'
 demfile=~/osm-contours/heightmap.tif
 
+echo "Updating saddles..."
 psql -A -t -F ";" $DBname -c \
   "SELECT osm_id,ST_X(ST_Astext(ST_Transform(way,4326))),ST_Y(ST_Astext(ST_Transform(way,4326))),direction \
    FROM planet_osm_point WHERE \"natural\" IN ('saddle','col','notch') AND \

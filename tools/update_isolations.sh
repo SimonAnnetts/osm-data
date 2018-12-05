@@ -20,7 +20,7 @@
 
 DBname='otm'
 toolpath='./'
-demfile='~/osm-contours/heightmap.tif'
+demfile=~/osm-contours/heightmap.tif
 
 ###### Prepare #########
 #

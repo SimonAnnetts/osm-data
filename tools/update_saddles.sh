@@ -14,7 +14,7 @@
 
 DBname='otm'
 toolpath='./'
-demfile='~/osm-contours/heightmap.tif'
+demfile=~/osm-contours/heightmap.tif
 
 psql -A -t -F ";" $DBname -c \
   "SELECT osm_id,ST_X(ST_Astext(ST_Transform(way,4326))),ST_Y(ST_Astext(ST_Transform(way,4326))),direction \

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# script to prerender tile from zoom level 0 to 16 for the British Isles + Netherlands
+# script to prerender tiles for selected zoom levels and map styles for the British Isles + Netherlands
+# if the map style contains the name 27700 then we only render the British Isles.
 
 function printUsage() {
 	cat <<EOF
@@ -11,8 +12,6 @@ EOF
 }
 
 starttime=$(date +%s)
-
-OPTIND=1         # Reset in case getopts has been used previously in the shell.
 zoom_levels=""
 maps_names=""
 while [[ $# -gt 0 ]];  do
@@ -28,21 +27,42 @@ done
 # prefix all output from now on with timestamps
 exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}' |tee -ia render.log)
 exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' |tee -ia render.log >&2)
-echo "zoom_levels=$zoom_levels map_names=$map_names"
+echo "Starting rendering for zoom_levels=${zoom_levels} and map_names={$map_names}"
 
 for i in $zoom_levels; do
-	n=4
-	[ $i = 8 ] || [ $i = 12 ] && n=2
-	[ $i = 9 ] || [ $i = 10 ] || [ $i = 11 ] && n=1
 
 	for j in $map_names; do
-		bb="-x -11 -X 8 -y 48.75 -Y 62.5"
-		[ -n "$(echo ${j}|grep 27700)" ] && bb="-x -11 -X 2 -y 48.75 -Y 62.5"
+		echo "Starting rendering zoom level ${i} for map style ${j}..."
+		istarttime=$(date +%s)
 
-		echo "Rendering Zoom level ${i} for ${j}: "
+		is27700=0
+		[ -n "$(echo ${j}|grep 27700)" ] && is27700=1
+
+		# number of threads to use (depends on zoomlevel, complexity and memory usgae)
+		n=4
+		if [ ${is27700} ]; then
+			[ $i = 3 ] || [ $i = 7 ] && n=2
+			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] && n=1
+		else
+			[ $i = 8 ] || [ $i = 12 ] && n=2
+			[ $i = 9 ] || [ $i = 10 ] || [ $i = 11 ] && n=1
+		fi
+
+		# british isles bounding box for both projections
+		bb="-x -11 -X 2 -y 49 -Y 61"
 		./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
-		[ $? != 0 ] && echo "Render failed on zoom level ${i} for ${j} !" && exit 1
-		echo "Done!"
+		[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
+
+		# also render other country bboxes if not 27700 projection
+		if [ ! ${is27700} ]; then
+			# (for netherlands)
+			bb="-x 3 -X 7.5 -y 50.5 -Y 54"
+			./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
+			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
+		fi		
+		
+		iendtime=$(date +%s)
+		echo "Done rendering zoom level ${i} for map style ${j} in $[${iendtime}-${istarttime}] seconds! All your Maps Belong to Us!"
 	
 		echo "Restarting renderd ...."
 		pkill renderd
@@ -54,4 +74,4 @@ for i in $zoom_levels; do
 done
 
 endtime=$(date +%s)
-echo "Done in $[${endtime}-${starttime}] seconds! All your Maps Belong to Us!"
+echo "Done all requested maps and zoomlevels in $[${endtime}-${starttime}] seconds! All your Maps Belong to Us!"

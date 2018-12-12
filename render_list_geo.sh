@@ -32,25 +32,26 @@ if ($options->{x} && $options->{X} &&
     $Z = $options->{Z};
     for my $iz ($options->{z}..$options->{Z})
     {
-	my ($zoom, $x, $X, $y, $Y, $cmd, $n);
-	$zoom = 1 << $iz;
-	$x = int($zoom * ($options->{x} + 180) / 360);
-	$X = int($zoom * ($options->{X} + 180) / 360);
-	$y = int($zoom * (1 - log(tan($options->{y}*pi/180) + sec($options->{y}*pi/180))/pi)/2);
-	$Y = int($zoom * (1 - log(tan($options->{Y}*pi/180) + sec($options->{Y}*pi/180))/pi)/2);
-	#some stupid magic: aligning max range values to the border of meta-bundles (caused by internal bug of render_list)
-	$X=(int($X/$bulkSize)+1)*$bulkSize-1;
-	$y=(int($y/$bulkSize)+1)*$bulkSize-1;
-	$n = 2;
-	#be careful! y and Y used in reversed order
-	$cmd="render_list -a -z ".$iz." -Z ".$iz." -x ".$x." -X ".$X." -y ".$Y." -Y ".$y;
-	if ($options->{n}) {$cmd = $cmd." -n ".$options->{n}};
-  if ($options->{m}) {$cmd = $cmd." -m ".$options->{m}};
-  if ($options->{f}) {$cmd = $cmd." -f "};
-  print $cmd."\n";
-	system($cmd);
-	print("\nZoom factor: ".$iz." finished at\n");
-	system("date");
+        my ($zoom, $x, $X, $y, $Y, $cmd, $n);
+        $zoom = 1 << $iz;
+        
+        $x = int($zoom * ($options->{x} + 180) / 360);
+        $X = int($zoom * ($options->{X} + 180) / 360);
+        $y = int($zoom * (1 - log(tan($options->{y}*pi/180) + sec($options->{y}*pi/180))/pi)/2);
+        $Y = int($zoom * (1 - log(tan($options->{Y}*pi/180) + sec($options->{Y}*pi/180))/pi)/2);
+        #some stupid magic: aligning max range values to the border of meta-bundles (caused by internal bug of render_list)
+        $X=(int($X/$bulkSize)+1)*$bulkSize-1;
+        $y=(int($y/$bulkSize)+1)*$bulkSize-1;
+        $n = 2;
+        #be careful! y and Y used in reversed order
+        $cmd="render_list -a -z ".$iz." -Z ".$iz." -x ".$x." -X ".$X." -y ".$Y." -Y ".$y;
+        if ($options->{n}) {$cmd = $cmd." -n ".$options->{n}};
+        if ($options->{m}) {$cmd = $cmd." -m ".$options->{m}};
+        if ($options->{f}) {$cmd = $cmd." -f "};
+        print $cmd."\n";
+        system($cmd);
+        print("\nZoom factor: ".$iz." finished at\n");
+        system("date");
     }
     print "\nRendering finished at: ";
     system("date");

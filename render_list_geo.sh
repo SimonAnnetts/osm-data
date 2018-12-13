@@ -44,7 +44,7 @@ if ($options->{x} && $options->{X} &&
         $y=(int($y/$bulkSize)+1)*$bulkSize-1;
         $n = 2;
         #be careful! y and Y used in reversed order
-        $cmd="render_list -a -z ".$iz." -Z ".$iz." -x ".$x." -X ".$X." -y ".$Y." -Y ".$y;
+        $cmd="render_list -a -l 99 -z ".$iz." -Z ".$iz." -x ".$x." -X ".$X." -y ".$Y." -Y ".$y;
         if ($options->{n}) {$cmd = $cmd." -n ".$options->{n}};
         if ($options->{m}) {$cmd = $cmd." -m ".$options->{m}};
         if ($options->{f}) {$cmd = $cmd." -f "};

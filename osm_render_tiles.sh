@@ -43,7 +43,7 @@ for i in $zoom_levels; do
 		if [ ${is27700} ]; then
 			[ $i = 3 ] || [ $i = 7 ] && n=2
 			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] && n=1
-			# our 27700 map is square with origin at [-350000, -100000, 1050000, 1300000] = tile 0, 2^$i
+			# our 27700 map is square with bounds [-350000, -100000, 1050000, 1300000] and origin at tile 0, 2^$i
 			X=$(echo "2^${i}-1"|bc)
 			Y=$(echo "2^${i}-1"|bc)
 			bb="-x 0 -X ${X} -y 0 -Y ${Y}"
@@ -52,26 +52,14 @@ for i in $zoom_levels; do
 		else
 			[ $i = 8 ] || [ $i = 12 ] && n=2
 			[ $i = 9 ] || [ $i = 10 ] || [ $i = 11 ] && n=1
-
-			# british isles bounding box in lon/lat for 900913
-			bb="-x -11 -X 2 -y 49 -Y 61"
-			./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
-			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
-			# (for netherlands)
-			bb="-x 3 -X 7.5 -y 50.5 -Y 54"
-			./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
-			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
+			# read our bounding box list from file
+			cat bboxes_900913.txt |grep -v '#' |while read bb; do
+				if [ -n ${bb} ]; then
+					./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
+					[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
+				fi
+			done
 		fi
-
-
-
-		# also render other country bboxes if not 27700 projection
-		if [ ! ${is27700} ]; then
-			# (for netherlands)
-			bb="-x 3 -X 7.5 -y 50.5 -Y 54"
-			./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
-			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
-		fi		
 		
 		iendtime=$(date +%s)
 		echo "Done rendering zoom level ${i} for map style ${j} in $[${iendtime}-${istarttime}] seconds! All your Maps Belong to Us!"

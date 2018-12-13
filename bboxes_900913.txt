@@ -1,0 +1,6 @@
+# This file contains a list of bounding boxes in lon/lat coordinates
+# that will be used to limit the rendering of tiles in 900913 proj
+# British Isles
+-x -11 -X 2 -y 49 -Y 61
+# Netherlands
+-x 3 -X 7.5 -y 50.5 -Y 54

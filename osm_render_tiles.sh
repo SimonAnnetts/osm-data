@@ -47,7 +47,7 @@ for i in $zoom_levels; do
 			X=$(echo "2^${i}-1"|bc)
 			Y=$(echo "2^${i}-1"|bc)
 			bb="-x 0 -X ${X} -y 0 -Y ${Y}"
-			render_list -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
+			render_list -a -l 99 -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
 			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
 		else
 			[ $i = 8 ] || [ $i = 12 ] && n=2

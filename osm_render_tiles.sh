@@ -8,17 +8,20 @@ function printUsage() {
 Usage: osm_render_tiles -z [zoom levels] -m [map names]
 	-z	a comma separated list of zoom levels
 	-m	a comma separated list of map names as defined in renderd.conf
+	-f  force replace tiles if exist already
 EOF
 }
 
 starttime=$(date +%s)
 zoom_levels=""
 maps_names=""
+force=""
 while [[ $# -gt 0 ]];  do
 	argument="$1" 
 	case $argument in
 		-z) zoom_levels=$(echo "$2"| sed 's/,/ /g'); shift 2;;
 		-m) map_names=$(echo "$2"| sed 's/,/ /g'); shift 2;;
+		-f) force="-f"; shift 1;;
 		-*) echo "Unknown argument: \"$argument\""; printUsage; exit 1;;
 		*) break;;
 	esac
@@ -27,6 +30,13 @@ done
 # prefix all output from now on with timestamps
 exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}' |tee -ia render.log)
 exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' |tee -ia render.log >&2)
+
+echo "Restarting renderd ...."
+pkill renderd
+sleep 3
+while [ -z "$(pgrep renderd)" ]; do sleep 1; done
+sleep 20
+
 echo "Starting rendering for zoom_levels=${zoom_levels} and map_names={$map_names}"
 
 for i in $zoom_levels; do
@@ -41,13 +51,14 @@ for i in $zoom_levels; do
 		# number of threads to use (depends on zoomlevel, complexity and memory usgae)
 		n=4
 		if [ ${is27700} ]; then
-			[ $i = 3 ] || [ $i = 7 ] && n=2
+			[ $i = 3 ] || [ $i = 7 ] || [ $i = 8 ]|| [ $i = 9 ] && n=2
 			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] && n=1
 			# our 27700 map is square with bounds [-350000, -100000, 1050000, 1300000] and origin at tile 0, 2^$i
 			X=$(echo "2^${i}-1"|bc)
 			Y=$(echo "2^${i}-1"|bc)
 			bb="-x 0 -X ${X} -y 0 -Y ${Y}"
-			render_list -a -l 99 -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
+			echo "Running: render_list -a -l 99 -n ${n} -m \"${j}\" ${bb} -z ${i} -Z ${i} ${force}"
+			render_list -a -l 99 -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} ${force}
 			[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
 		else
 			[ $i = 8 ] || [ $i = 12 ] && n=2
@@ -55,7 +66,8 @@ for i in $zoom_levels; do
 			# read our bounding box list from file
 			cat bboxes_900913.txt |grep -v '#' |while read bb; do
 				if [ -n ${bb} ]; then
-					./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} -f
+					echo "Running: ./render_list_geo.sh -n ${n} -m \"${j}\" ${bb} -z ${i} -Z ${i} ${force}"
+					./render_list_geo.sh -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} ${force}
 					[ $? != 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && exit 1
 				fi
 			done

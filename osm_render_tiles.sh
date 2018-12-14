@@ -61,8 +61,8 @@ for i in $zoom_levels; do
 		# number of threads to use (depends on zoomlevel, complexity and memory usgae)
 		n=4
 		if [ ${is27700} ]; then
-			[ $i = 3 ] || [ $i = 7 ] || [ $i = 9 ] && n=2
-			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] || [ $i = 8 ] && n=1
+			[ $i = 3 ] || [ $i = 9 ] && n=2
+			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] || [ $i = 7 ] || [ $i = 8 ] && n=1
 			# our 27700 map is square with bounds [-350000, -100000, 1050000, 1300000] and origin at tile 0, 2^$i
 			X=$(echo "2^${i}-1"|bc)
 			Y=$(echo "2^${i}-1"|bc)

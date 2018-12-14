@@ -4,3 +4,4 @@ expire.list
 *.log
 statistics.txt
 tools/.config
+stats/*

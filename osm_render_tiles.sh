@@ -64,7 +64,9 @@ for i in $zoom_levels; do
 			[ $i = 3 ] || [ $i = 9 ] && n=2
 			[ $i = 4 ] || [ $i = 5 ] || [ $i = 6 ] || [ $i = 7 ] || [ $i = 8 ] && n=1
 			# our 27700 map is square with bounds [-350000, -100000, 1050000, 1300000] and origin at tile 0, 2^$i
-			X=$(echo "2^${i}-1"|bc)
+			# but we only need to render the British Isles. Lets remove 10% left and 28% right
+			x=$(echo "2^${i}/10/1"|bc)
+			X=$(echo "2^${i}-2^${i}*28/100/1"|bc)
 			Y=$(echo "2^${i}-1"|bc)
 			bb="-x 0 -X ${X} -y 0 -Y ${Y}"
 			echo "Running: render_list -a -l 99 -n ${n} -m \"${j}\" ${bb} -z ${i} -Z ${i} ${force}"

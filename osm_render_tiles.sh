@@ -68,7 +68,7 @@ for i in $zoom_levels; do
 			x=$(echo "2^${i}/10/1"|bc)
 			X=$(echo "2^${i}-2^${i}*28/100/1"|bc)
 			Y=$(echo "2^${i}-1"|bc)
-			bb="-x 0 -X ${X} -y 0 -Y ${Y}"
+			bb="-x ${x} -X ${X} -y 0 -Y ${Y}"
 			echo "Running: render_list -a -l 99 -n ${n} -m \"${j}\" ${bb} -z ${i} -Z ${i} ${force}"
 			render_list -a -l 99 -n ${n} -m "${j}" ${bb} -z ${i} -Z ${i} ${force}
 			[ $? -ne 0 ] && echo "Rendering failed on zoom level ${i} for map style ${j} !" && error=1

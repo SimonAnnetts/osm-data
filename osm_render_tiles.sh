@@ -39,7 +39,7 @@ done
 # prefix all output from now on with timestamps and also copy to log file
 mkdir logs 2>/dev/null
 exec > >(awk '{print strftime("%Y-%m-%d %H:%M:%S [1] "),$0; fflush();}' |tee -ia logs/osm_render.log)
-exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' |tee -ia logs/osm_render.log)
+exec 2> >(awk '{print strftime("%Y-%m-%d %H:%M:%S [2] "),$0; fflush();}' |tee -ia logs/osm_render.log >&2)
 
 echo "Restarting renderd ...."
 pkill renderd
@@ -108,7 +108,7 @@ enddate=$(date +%Y%m%d-%H%M%S)
 [ $error -eq 2 ] && echo "Aborted requested maps and zoomlevels in $[${endtime}-${starttime}] seconds! All your Maps Belong to Us!"
 
 # turn off time stamping and log redirection
-exec >/dev/tty
-exec 2>/dev/tty
+exec >/dev/tty0
+exec 2>/dev/tty0
 mv logs/osm_render.log logs/osm_render_${startdate}_${enddate}.log
 [ $error -ne 0 ] && exit 1
